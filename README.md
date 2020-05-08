@@ -1,3 +1,7 @@
+[![](https://godoc.org/github.com/lithictech/runtime-js-env?status.svg)](http://godoc.org/github.com/lithictech/runtime-js-env)
+
+![Build](https://github.com/lithictech/runtime-js-env/workflows/Build/badge.svg)
+
 # runtime-js-env
 
 Write dynamic config into a static index.html for use in Single Page Applications,
