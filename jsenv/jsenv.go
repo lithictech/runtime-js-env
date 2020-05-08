@@ -23,19 +23,23 @@ type Config struct {
 	Indent string
 }
 
-var DefaultConfig = Config{}
+var DefaultConfig = Config{
+	WindowVarName: "_jsenv",
+	EnvPrefixes:   []string{"REACT_APP_", "NODE_", "HEROKU_"},
+	Indent:        "  ",
+}
 
 // InstallAt reads the file at indexPath, and overwrites it with an index.html with config.
 // See README for more info.
 func InstallAt(indexPath string, cfg Config) error {
 	if cfg.WindowVarName == "" {
-		cfg.WindowVarName = "_jsenv"
+		cfg.WindowVarName = DefaultConfig.WindowVarName
 	}
 	if len(cfg.EnvPrefixes) == 0 {
-		cfg.EnvPrefixes = []string{"REACT_APP_", "NODE_", "HEROKU_"}
+		cfg.EnvPrefixes = DefaultConfig.EnvPrefixes
 	}
 	if cfg.Indent == "" {
-		cfg.Indent = "  "
+		cfg.Indent = DefaultConfig.Indent
 	}
 
 	indexFile, err := os.Open(indexPath)

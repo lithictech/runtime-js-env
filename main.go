@@ -1,13 +1,9 @@
 package main
 
 import (
-	"github.com/lithictech/runtime-js-env/jsenv"
-	"log"
+	"github.com/lithictech/runtime-js-env/cmd"
 )
 
 func main() {
-	err := jsenv.InstallAt("index.html", jsenv.DefaultConfig)
-	if err != nil {
-		log.Fatal(err)
-	}
+	cmd.Execute()
 }

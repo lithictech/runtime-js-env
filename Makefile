@@ -11,3 +11,9 @@ check:
 	@go vet
 	@echo "Running tests"
 	@make test
+
+full-test:
+	@echo "<html><head/></html>" > index.html
+	@go build
+	@REACT_APP_TEST_VAR=XYZ ./runtime-js-env
+	@cat index.html
