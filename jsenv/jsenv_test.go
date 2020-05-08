@@ -4,8 +4,8 @@ import (
 	"github.com/lithictech/runtime-js-env/jsenv"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/rgalanakis/golangal"
 	"io/ioutil"
-	"os"
 	"testing"
 )
 
@@ -29,25 +29,13 @@ var _ = Describe("jsenv", func() {
 		return string(b)
 	}
 
-	var addedEnvs []string
-	BeforeEach(func() {
-		addedEnvs = []string{}
-	})
-	AfterEach(func() {
-		for _, e := range addedEnvs {
-			Expect(os.Unsetenv(e)).To(Succeed())
-		}
-	})
-	mustSetenv := func(k, v string) {
-		addedEnvs = append(addedEnvs, k)
-		Expect(os.Setenv(k, v)).To(Succeed())
-	}
+	addEnvVar := golangal.EnvVars()
 
 	Describe("Install", func() {
 		It("installs config at window._jsenv", func() {
 			index := mustWrite(`<html><head></head><body /></html>`)
-			mustSetenv("REACT_APP_YO", "ma")
-			mustSetenv("NODE_BLAH", "staging")
+			addEnvVar("REACT_APP_YO", "ma")
+			addEnvVar("NODE_BLAH", "staging")
 			Expect(jsenv.InstallAt(index, jsenv.DefaultConfig)).To(Succeed())
 			Expect(mustRead(index)).To(HavePrefix(`<html><head><script id="jsenv">
   window._jsenv = {
@@ -58,7 +46,7 @@ var _ = Describe("jsenv", func() {
 		})
 		It("noops on reinstall", func() {
 			index := mustWrite(`<html><head></head><body /></html>`)
-			mustSetenv("HEROKU_APP_NAME", "great")
+			addEnvVar("HEROKU_APP_NAME", "great")
 			Expect(jsenv.InstallAt(index, jsenv.DefaultConfig)).To(Succeed())
 			Expect(jsenv.InstallAt(index, jsenv.DefaultConfig)).To(Succeed())
 			Expect(mustRead(index)).To(HavePrefix(`<html><head><script id="jsenv">
@@ -69,7 +57,7 @@ var _ = Describe("jsenv", func() {
 		})
 		It("handles env vars with multiple =", func() {
 			index := mustWrite(`<html><head></head><body /></html>`)
-			mustSetenv("REACT_APP_MYVAR", "test1=yeah")
+			addEnvVar("REACT_APP_MYVAR", "test1=yeah")
 			Expect(jsenv.InstallAt(index, jsenv.DefaultConfig)).To(Succeed())
 			Expect(mustRead(index)).To(HavePrefix(`<html><head><script id="jsenv">
   window._jsenv = {
@@ -79,7 +67,7 @@ var _ = Describe("jsenv", func() {
 		})
 		It("escapes var values with quote", func() {
 			index := mustWrite(`<html><head></head><body /></html>`)
-			mustSetenv("REACT_APP_MYVAR", `x'"quoted"'y`)
+			addEnvVar("REACT_APP_MYVAR", `x'"quoted"'y`)
 			Expect(jsenv.InstallAt(index, jsenv.DefaultConfig)).To(Succeed())
 			Expect(mustRead(index)).To(HavePrefix(`<html><head><script id="jsenv">
   window._jsenv = {
