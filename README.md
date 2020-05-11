@@ -20,9 +20,35 @@ before or alongside the main JS bundle. Or config is templated in for each reque
 
 Both of these are too complex for a thing that can be solved in just a bit of code.
 
-## How do I use runtime-js-env? 
+## Installation
 
-You need to do two things.
+`runtime-js-env` is a Golang program, so you need some version of Go.
+Then you can:
+
+```
+$ go get github.com/lithictech/runtime-js-env
+$ runtime-js-env --help
+NAME:
+   runtime-js-env - A new cli application
+
+USAGE:
+   runtime-js-env [global options] command [command options] [arguments...]
+
+COMMANDS:
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --index value, -i value            Path to the index.html file. Default to index.html in pwd. (default: "index.html")
+   --window-var-name value, -w value  Attribute name for the config object. (default: "_jsenv")
+   --env-prefixes value, -p value     Environment variable prefixes to copy into the config object. (default: "REACT_APP_", "NODE_", "HEROKU_")
+   --indent value, -t value           Indentation for each line in the config script tag. (default: "  ")
+   --help, -h                         show help (default: false)
+$ runtime-js-env -i public/index.html
+```
+
+## Usage
+
+After installation, there are two things you need to do to use `runtime-js-env`:
 
 First, when your app (whatever is serving your HTML) boots,
 call `runtime-js-env` with the path to your index.html file
