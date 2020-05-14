@@ -23,10 +23,11 @@ Both of these are too complex for a thing that can be solved in just a bit of co
 ## Installation
 
 `runtime-js-env` is a Golang program, so you need some version of Go.
-Then you can:
+Installation is the same as any other Golang CLI:
 
 ```
 $ go get github.com/lithictech/runtime-js-env
+
 $ runtime-js-env --help
 NAME:
    runtime-js-env - A new cli application
@@ -43,7 +44,6 @@ GLOBAL OPTIONS:
    --env-prefixes value, -p value     Environment variable prefixes to copy into the config object. (default: "REACT_APP_", "NODE_", "HEROKU_")
    --indent value, -t value           Indentation for each line in the config script tag. (default: "  ")
    --help, -h                         show help (default: false)
-$ runtime-js-env -i public/index.html
 ```
 
 ## Usage
@@ -54,6 +54,18 @@ First, when your app (whatever is serving your HTML) boots,
 call `runtime-js-env` with the path to your index.html file
 (and any other options you need).
 
+Then just call `runtime-js-env` with the location of your `index.html` file:
+
+```
+$ REACT_APP_MYVAR=hello runtime-js-env -i public/index.html
+$ cat public/index.html
+<!DOCTYPE html><html><head><script id="jsenv">
+  window._jsenv = {
+    "REACT_APP_MYVAR": "hello",
+  };
+</script></head><body><div id="___gatsby"></div><script src="/commons.js"></script></body></html>
+```
+
 This will overwrite your index.html file with a version
 that injects a `<script>` tag in `<head>` which includes your config
 (it's safe to call multiple times, and uses Go's HTML5 parser so should be valid for whatever you throw at it).
@@ -62,10 +74,12 @@ Then, in your JavaScript, wherever you use `process.env` you should prefer `wind
 
 ```js
 // config.js
-const env = window._jsenv || process.env;
-export default {
-  myVar: env.REACT_APP_MY_VAR || "default",
-};
+export function readConfig() {
+    const env = window._jsenv || process.env;
+    return {
+      myVar: env.REACT_APP_MY_VAR || "default",
+    };
+}
 ```
 
 That's all- basically wherever you use `process.env`,
