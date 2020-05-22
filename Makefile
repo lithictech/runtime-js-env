@@ -6,7 +6,7 @@ fmt:
 
 check:
 	@echo "Checking formatting"
-	@[ -z "$(shell gofmt -l ./..)" ]
+	@[ -z "$(shell gofmt -l .)" ]
 	@echo "Vetting"
 	@go vet
 	@echo "Running tests"
